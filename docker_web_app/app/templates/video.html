@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body style="background-color:darkgray;">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>YOLO Web App</title>
+</head>
+	<center>
+	<img src="{{ url_for('static', filename='images/yologo.png') }}" alt="YoLo logo" width="5%" height="5%">
+	
+	<div>
+		<img src="{{ url_for('video', filename=filename) }}" width="70%">
+	</div>
+	</center>
+</body>
+</html>

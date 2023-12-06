@@ -1,0 +1,29 @@
+<!doctype html>
+<title>YOLO Web App</title>
+<body style="background-color:darkgray;">
+<center>
+<img src="{{ url_for('static', filename='images/yologo.png') }}" alt="YoLo logo" width="20%" height="20%">
+<h2>Upload a video</h2>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+<form method="post" action="/" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="file" name="file" autocomplete="off" required>
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Upload">
+	</p>
+</form>
+<center/>
+</body>
