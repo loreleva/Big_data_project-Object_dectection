@@ -23,6 +23,8 @@ On the tested videos, YOLOv3 reached **2 FPS** on CPU and between **31** and **3
 
 ## Run the web app
 
+Before running the web app, download the weights of YOLOv3 from [GoogleDrive](https://drive.google.com/file/d/1Y5Q1WeKqMGleCxYU0HWrqs7pmqSsDxIe/view?usp=sharing)
+
 ### Docker
 The web app can be run with Docker. Execute inside the folder ``docker_web_app``:
 ```
