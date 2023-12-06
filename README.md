@@ -4,7 +4,7 @@ Project for the Big Data course on object detection for autonomous driving with 
 Implemented in Pytorch from scratch [**YOLOv3**](https://arxiv.org/abs/1804.02767) to detect objects relevant for autonomous driving. A simple **web app** has been also created to test the detection model on any driving video given in input (videos from the [calib_challenge](https://github.com/commaai/calib_challenge/tree/main) of commai can be easily retrieved and used) and check the number of frames per second that YOLOv3 can generate.
 
 The backbone network **Darknet-53** (a CNN with 53 convolutional layers) has been trained on a portion of the ImageNet dataset:
-- *total images*: 1,281,167
+- *total dataset images*: 1,281,167
 - *classes*: 1,000
 - *train set*: 500,000 images (500 per class)
 - *test set*: 100,000 (100 per class) 
