@@ -38,3 +38,7 @@ The web app can be executed directly with Flask (you will need all the packages 
 ```
 flask --app app run
 ```
+or
+```
+python3 -m flask --app app run
+```
