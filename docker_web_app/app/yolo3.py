@@ -255,6 +255,7 @@ class yolov3(nn.Module):
 
 model = yolov3().to(device)
 model.load_state_dict(torch.load("yolo_weights", map_location=torch.device(device)))
+model.eval()
 
 
 def non_max_suppression(detections, thr_detection, thr_suppression):
@@ -397,9 +398,11 @@ def obtain_final_img(img, detections, thr_detection, thr_suppression):
 			label = NUIMAGES_LABELS[int(bbox[5])]
 			text =  label + f" {(bbox[4] * 100):.2f}"
 			color = label_to_color[label]
+			text = text.upper()
 		else:
 			text = NUIMAGES_LABELS[int(bbox[4])]
 			color = label_to_color[text]
+			text = text.upper()
 		
 		img = cv2.rectangle(img,
                            (bbox[0], bbox[1]),
@@ -440,75 +443,6 @@ def obtain_final_img(img, detections, thr_detection, thr_suppression):
 		res_detections = new_res_detections
 	return img
 
-
-def plot_bboxes(img, bboxes, type_bbox="yolo", confidence=True, img_format="torch"):
-	global NUIMAGES_LABELS, label_to_color
-	fontScale = 0.4
-	thickness = 1
-	font = cv2.FONT_HERSHEY_COMPLEX
-    
-    # modify img array to make it compatible with cv2
-	if img_format == "torch":
-		img = torch.permute(img, (1, 2, 0)).numpy()
-	elif img_format == "numpy":
-		img = np.transpose(img, (1, 2, 0))
-	if img_format != "cv2":
-		img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-	if img.dtype != np.uint8:
-		img *= 255
-		img = img.astype(np.uint8)
-        
-	img_h, img_w = img.shape[:2]
-	if type_bbox == "yolo":
-        # transforming yolo boxes in [xmin, ymin, xmax, ymax, class] type
-		bboxes = utils.yolo_to_pascal(img_h, img_w, bboxes, confidence=confidence)
-
-	for bbox in bboxes:
-			if int(bbox[5]) != 5:
-				continue
-			if confidence:
-				# add confidence score to text
-				label = NUIMAGES_LABELS[int(bbox[5])]
-				text =  label + f" {(bbox[4] * 100):.2f}"
-				color = label_to_color[label]
-			else:
-				text = NUIMAGES_LABELS[int(bbox[4])]
-				color = label_to_color[text]
-                
-			img = cv2.rectangle(img,
-                                (bbox[0], bbox[1]),
-                                (bbox[2], bbox[3]), 
-                                color, 
-                                2)
-            
-			text_size, _ = cv2.getTextSize(text, 
-                                           font, 
-                                           fontScale=fontScale, 
-                                           thickness=thickness)
-			text_w, text_h = text_size
-			text_x, text_y = bbox[:2]
-            
-            # check if text goes out of the image
-			if text_x + text_w > img_w:
-				text_x = img_w - text_w
-			if text_y - text_h < 0:
-				text_y = 0
-			img = cv2.rectangle(img, 
-                                (text_x, text_y), 
-                                (text_x + text_w, text_y - text_h), 
-                                color, 
-                                -1)
-			img = cv2.putText(img, 
-                              text, 
-                              (text_x, text_y), 
-                              font, 
-                              fontScale=fontScale, 
-                              color=(255, 255, 255),
-                              thickness=thickness)
-	return img
-
-import time
-
 def get_image_with_bboxes(img):
 	global model, resize
 	
@@ -516,12 +450,12 @@ def get_image_with_bboxes(img):
 	img = resize(image=img)["image"]
 	# transform image channels to RGB
 	input_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+	
 	input_img = torch.from_numpy(input_img)
 	input_img = torch.permute(input_img, (2, 0, 1)).float()/255
 	with torch.no_grad():
 		predictions = model(input_img.unsqueeze(0).to(device))
-	#start_time = time.time()
-	new_img = obtain_final_img(img, predictions, thr_detection=0.98, thr_suppression=0.10)
+	
+	new_img = obtain_final_img(img, predictions, thr_detection=0.97, thr_suppression=0.10)
 
-	#print(f"POSTPROCESSING TIME: {time.time() - start_time}")
 	return new_img

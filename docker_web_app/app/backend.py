@@ -5,18 +5,17 @@ import time
 import yolo3
 
 UPLOAD_FOLDER = 'uploads/'
-SAVING_FRAMES_PER_SECOND = 10
 
 
 def generate_frames(filename):
 	global yolo_model
 	cap = cv2.VideoCapture(UPLOAD_FOLDER+filename)
 	fps = cap.get(cv2.CAP_PROP_FPS)
-	#saving_frames_per_second = min(fps, SAVING_FRAMES_PER_SECOND)
+	
+	start_time = time.time()
 	
 	count = 0
 	while True:
-		start_time = time.time()
 		is_read, frame = cap.read()
 		if not is_read:
 			break
@@ -34,15 +33,17 @@ def generate_frames(filename):
 		)
 
 		frame = resize_original(image=frame)["image"]#, bboxes=bboxes)["image"]
-
+		
 		# count fps
+		new_time = time.time()
+		fps = 1/(new_time - start_time)
+		start_time = new_time
+		text = f"FPS: {fps:.2f}"
+
 		fontScale = 0.8
 		thickness = 1
 		font = cv2.FONT_HERSHEY_COMPLEX
-		if count % 10 == 0:
-			fps = 1/(time.time() - start_time)
-		count += 1
-		text = f"FPS: {fps:.5f}"
+
 		text_size, _ = cv2.getTextSize(text, font, fontScale=fontScale, thickness=thickness)
 		text_w, text_h = text_size
 		frame = cv2.rectangle(frame, 
