@@ -19,7 +19,7 @@ Decent results has been obtained only for the ``car`` class, which will be the o
 
 The web app will use CUDA if available. 
 
-On the tested videos, YOLOv3 reached **2 FPS** on CPU and between **31** and **33 FPS** on GPU.
+On the tested videos, YOLOv3 reached **2 FPS** on CPU and between **23** and **24 FPS** on GPU.
 
 ## Run the web app
 
